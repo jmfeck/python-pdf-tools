@@ -35,7 +35,7 @@ Contributors are welcome! If you'd like to contribute, please fork the repositor
 
 ## License
 
-This project is open-source and licensed under [Your License Here].
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
