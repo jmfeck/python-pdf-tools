@@ -1,6 +1,6 @@
 # Python PDF Tools
 
-**python-pdf-tools** is a Python-based library designed to offer a simple, accessible alternative for various PDF manipulations. This project is under development and aims to provide functions such as merging, splitting, compressing, converting, and protecting PDFs, among other essential features.
+**Python PDF Tools** is a Python-based collection of ready-to-use applications designed for various PDF manipulations. Each tool is set up as an independent app that can be triggered by running a batch file located in the root of its folder. This project is under active development, and it currently includes functions such as merging, splitting, compressing, converting, and protecting PDFs, among other essential features.
 
 ## Current Status
 
