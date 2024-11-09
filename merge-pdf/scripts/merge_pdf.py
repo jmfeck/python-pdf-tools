@@ -10,7 +10,7 @@ import os
 import sys
 import argparse
 import logging
-from PyPDF2 import PdfMerger
+from pypdf import PdfWriter
 from datetime import datetime
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -63,7 +63,7 @@ elif args.sort == "date":
     logging.info("PDF Merger: Sorting by creation date")
 
 # Initialize PdfMerger and start merging files
-merger = PdfMerger()
+merger = PdfWriter()
 logging.info("PDF Merger: Merging files...")
 for pdf_file in input_pdf_files:
     pdf_path = os.path.join(path_input, pdf_file)
