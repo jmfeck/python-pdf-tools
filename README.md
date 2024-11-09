@@ -18,7 +18,7 @@ The project is currently in development, and functionalities are being implement
 - ❌ [extract-images](./extract-images): Extracts images from PDF pages.
 - ❌ [extract-text](./extract-text): Extracts raw text from PDF files.
 - ❌ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
-- ❌ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
+- ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [page-size-adjustment](./page-size-adjustment): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
 - ❌ [protect-pdf](./protect-pdf): Adds password protection to a PDF document.
