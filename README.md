@@ -4,18 +4,19 @@
 
 ## Current Status
 
-The project is currently in development, and functionalities are being implemented gradually. Each function is organized into its own folder within the repository, with individual `input`, `output`, and `scripts` folders to allow easy, modular usage of each tool.
+The project is currently
+ in development, and functionalities are being implemented gradually. Each function is organized into its own folder within the repository, with individual `input`, `output`, and `scripts` folders to allow easy, modular usage of each tool.
 
 ## Functions
 
 - ❌ [add-page-numbers](./add-page-numbers): Adds sequential page numbers to a PDF document.
 - ❌ [add-watermark](./add-watermark): Adds a watermark to PDF pages with custom text or images.
 - ❌ [compare-pdf](./compare-pdf): Highlights differences between two PDF files.
-- ❌ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
+- ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
 - ❌ [convert-from-pdf](./convert-from-pdf): Converts PDFs into other formats like Word or Excel.
 - ❌ [convert-to-pdf](./convert-to-pdf): Converts various document types (e.g., images, Word) into PDFs.
 - ❌ [document-encryption](./document-encryption): Encrypts PDF files with a password.
-- ❌ [extract-images](./extract-images): Extracts images from PDF pages.
+- ✅ [extract-images](./extract-images): Extracts images from PDF pages.
 - ❌ [extract-text](./extract-text): Extracts raw text from PDF files.
 - ❌ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
