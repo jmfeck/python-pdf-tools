@@ -18,7 +18,7 @@ The project is currently
 - ✅ [document-decryption](./document-decryption): Decrypts PDF files with a password.
 - ✅ [document-encryption](./document-encryption): Encrypts PDF files with a password.
 - ✅ [extract-images](./extract-images): Extracts images from PDF pages.
-- ❌ [extract-text](./extract-text): Extracts raw text from PDF files.
+- ✅ [extract-text](./extract-text): Extracts raw text from PDF files.
 - ❌ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [page-size-adjustment](./page-size-adjustment): Adjusts PDF pages between A4 and Letter sizes.
@@ -40,4 +40,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 *This README will be updated as new functionalities are added.*
-✅ just saving this here for later reference.

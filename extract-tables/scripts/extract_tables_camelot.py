@@ -9,11 +9,12 @@
 import os
 import sys
 import logging
-from pypdf import PdfReader
+import argparse
+import camelot
 from datetime import datetime
 
 # Program name for log prefix
-PROGRAM_NAME = "PDF Image Extractor"
+PROGRAM_NAME = "PDF Table Extractor"
 
 # Set up timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -35,19 +36,27 @@ path_log = os.path.join(path_log_folder, log_filename)
 # Set up logging with program name as prefix in each log entry
 os.makedirs(path_log_folder, exist_ok=True)
 log_format = f"{PROGRAM_NAME}: %(message)s"
-
-# Configure root logger for console output
-logging.basicConfig(level=logging.DEBUG, format=log_format)
+logging.basicConfig(level=logging.INFO, format=log_format)
 
 # Configure file handler with the same format
 file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
-logging.info("Starting Process")
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Extract tables from PDF files and save in CSV or Excel format.")
+parser.add_argument("--export-format", type=str, choices=["csv", "excel"], default="csv",
+                    help="Output format for the extracted tables: 'csv' or 'excel' (default: csv)")
+parser.add_argument("--flavor", type=str, choices=["stream", "lattice"], default="lattice",
+                    help="Table extraction method: 'lattice' for tables with borders, 'stream' for tables without (default: lattice)")
+args = parser.parse_args()
+
+logging.info("Starting PDF Table Extraction Process with Camelot")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
+logging.info(f"Output format: {args.export_format}")
+logging.info(f"Extraction flavor: {args.flavor}")
 logging.info("Searching for PDF files in the input folder...")
 
 # List and count PDF files
@@ -67,24 +76,28 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        reader = PdfReader(pdf_path)
         
-        # Process each page and extract images
-        for page_num, page in enumerate(reader.pages, start=1):
-            images_on_page = list(page.images)
-            logging.info(f"Page {page_num}: {len(images_on_page)} image(s) found.")
-            
-            for img_count, image_file_object in enumerate(images_on_page, start=1):
-                img_output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_p{page_num}_{img_count}_{image_file_object.name}"
-                img_output_path = os.path.join(path_output, img_output_filename)
-
-                with open(img_output_path, "wb") as fp:
-                    fp.write(image_file_object.data)
-                
-                logging.info(f"  - Extracted image {img_count} from page {page_num} to {img_output_filename}")
+        # Extract tables with camelot
+        tables = camelot.read_pdf(pdf_path, flavor=args.flavor, pages="all")
+        
+        if tables:
+            for table_index, table in enumerate(tables, start=1):
+                try:
+                    page_number = table.page
+                    output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page{page_number}_table{table_index}"                
+                    if args.export_format == "csv":
+                        output_path = os.path.join(path_output, f"{output_filename}.csv")
+                        table.to_csv(output_path, index=False)
+                        logging.info(f"Table {table_index} saved as CSV: {output_filename}.csv")
+                    elif args.export_format == "excel":
+                        output_path = os.path.join(path_output, f"{output_filename}.xlsx")
+                        table.to_excel(output_path, index=False)
+                        logging.info(f"Table {table_index} saved as Excel: {output_filename}.xlsx")
+                except Exception as e:
+                    logging.error(f"Failed to save table {table_index} - {e}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")
 
-logging.info("PDF Image Extraction Process Completed Successfully")
+logging.info("PDF Table Extraction Process Completed Successfully")
 logging.info(f"Total PDF files processed: {input_num_pdfs}")
