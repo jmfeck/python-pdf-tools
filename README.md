@@ -9,21 +9,21 @@ The project is currently
 
 ## Functions
 
-- ❌ [add-page-numbers](./add-page-numbers): Adds sequential page numbers to a PDF document.
-- ❌ [add-watermark](./add-watermark): Adds a watermark to PDF pages with custom text or images.
-- ❌ [compare-pdf](./compare-pdf): Highlights differences between two PDF files.
+- ❌ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
+- ❌ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
+- ❌ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages between A4 and Letter sizes.
+- ❌ [compare-pdf-files](./compare-pdf-files): Highlights differences between two PDF files.
 - ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
 - ❌ [convert-from-pdf](./convert-from-pdf): Converts PDFs into other formats like Word or Excel.
 - ❌ [convert-to-pdf](./convert-to-pdf): Converts various document types (e.g., images, Word) into PDFs.
-- ✅ [document-decryption](./document-decryption): Decrypts PDF files with a password.
-- ✅ [document-encryption](./document-encryption): Encrypts PDF files with a password.
-- ✅ [extract-images](./extract-images): Extracts images from PDF pages.
-- ✅ [extract-tables](./table-extraction): Extracts tables from PDFs into structured data formats.
-- ✅ [extract-text](./extract-text): Extracts raw text from PDF files.
-- ❌ [extract-text-ocr](./text-extraction-ocr): Uses OCR to extract text from scanned PDFs.
+- ✅ [pdf-decryption](./pdf-decryption): Decrypts PDF files with a password.
+- ✅ [pdf-encryption](./pdf-encryption): Encrypts PDF files with a password.
+- ✅ [extract-images-from-pdf](./extract-images-from-pdf): Extracts images from PDF pages.
+- ✅ [extract-tables-from-pdf](./extract-tables-from-pdf): Extracts tables from PDFs into structured data formats.
+- ✅ [extract-text-from-pdf](./extract-text-from-pdf): Extracts raw text from PDF files.
+- ❌ [extract-text-from-pdf-ocr](./extract-text-from-pdf-ocr): Uses OCR to extract text from scanned PDFs.
 - ✅ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
-- ❌ [page-size-adjustment](./page-size-adjustment): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
 - ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
 - ❌ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
