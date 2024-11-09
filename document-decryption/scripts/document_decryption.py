@@ -14,7 +14,7 @@ from pypdf import PdfReader, PdfWriter
 from datetime import datetime
 
 # Program name for log prefix
-PROGRAM_NAME = "PDF Encryptor"
+PROGRAM_NAME = "PDF Decryptor"
 
 # Set up timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -46,16 +46,15 @@ file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
 # Argument parser setup
-parser = argparse.ArgumentParser(description="Encrypt PDF files with a password.")
-parser.add_argument("--password", type=str, required=True, help="Password to encrypt the output PDF files.")
-parser.add_argument("--encryption-algo", type=str, default="AES-256-R5", help="Encryption algorithm (default: AES-256-R5).")
+parser = argparse.ArgumentParser(description="Decrypt PDF files with a password.")
+parser.add_argument("--password", type=str, required=True, help="Password to decrypt the input PDF files.")
 args = parser.parse_args()
 
-logging.info("Starting Process")
+logging.info("Starting Decryption Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
-logging.info("Searching for PDF files in the input folder...")
+logging.info("Searching for encrypted PDF files in the input folder...")
 
 # List and count PDF files
 input_pdf_files = [f for f in os.listdir(path_input) if f.endswith(".pdf")]
@@ -75,21 +74,26 @@ for pdf_file in input_pdf_files:
     try:
         os.makedirs(path_output, exist_ok=True)
         reader = PdfReader(pdf_path)
-        writer = PdfWriter(clone_from=reader)
+        
+        # Attempt to decrypt the PDF
+        if reader.is_encrypted:
+            logging.info(f"Attempting to decrypt {pdf_file}")
+            reader.decrypt(args.password)
+        
+        # Create a writer and add all pages to it
+        writer = PdfWriter()
+        for page in reader.pages:
+            writer.add_page(page)
 
-        # Encrypt the output PDF with the provided password and specified algorithm
-        logging.info(f"Encrypting the PDF with password using {args.encryption_algo} algorithm.")
-        writer.encrypt(args.password, algorithm=args.encryption_algo)
+        # Save the decrypted PDF
+        decrypted_output_path = os.path.join(path_output, f"{timestamp}_decrypted_{pdf_file}")
+        with open(decrypted_output_path, "wb") as decrypted_file:
+            writer.write(decrypted_file)
 
-        # Save the encrypted PDF
-        encrypted_output_path = os.path.join(path_output, f"{timestamp}_encrypted_{pdf_file}")
-        with open(encrypted_output_path, "wb") as encrypted_file:
-            writer.write(encrypted_file)
-
-        logging.info(f"Encrypted PDF saved as {encrypted_output_path}")
+        logging.info(f"Decrypted PDF saved as {decrypted_output_path}")
 
     except Exception as e:
-        logging.error(f"Failed to process {pdf_file} - {e}")
+        logging.error(f"Failed to decrypt {pdf_file} - {e}")
 
-logging.info("Process Completed Successfully")
+logging.info("Decryption Process Completed Successfully")
 logging.info(f"Total PDF files processed: {input_num_pdfs}")

@@ -22,13 +22,11 @@ The project is currently
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [page-size-adjustment](./page-size-adjustment): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
-- ❌ [protect-pdf](./protect-pdf): Adds password protection to a PDF document.
 - ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
 - ❌ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
 - ❌ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
 - ❌ [table-extraction](./table-extraction): Extracts tables from PDFs into structured data formats.
 - ❌ [text-extraction-ocr](./text-extraction-ocr): Uses OCR to extract text from scanned PDFs.
-- ❌ [unlock-pdf](./unlock-pdf): Removes password protection from a PDF.
 
 ## Contributing
 
