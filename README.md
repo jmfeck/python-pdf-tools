@@ -18,16 +18,17 @@ The project is currently
 - ✅ [document-decryption](./document-decryption): Decrypts PDF files with a password.
 - ✅ [document-encryption](./document-encryption): Encrypts PDF files with a password.
 - ✅ [extract-images](./extract-images): Extracts images from PDF pages.
+- ✅ [extract-tables](./table-extraction): Extracts tables from PDFs into structured data formats.
 - ✅ [extract-text](./extract-text): Extracts raw text from PDF files.
-- ❌ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
+- ❌ [extract-text-ocr](./text-extraction-ocr): Uses OCR to extract text from scanned PDFs.
+- ✅ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [page-size-adjustment](./page-size-adjustment): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
 - ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
 - ❌ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
 - ❌ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
-- ❌ [table-extraction](./table-extraction): Extracts tables from PDFs into structured data formats.
-- ❌ [text-extraction-ocr](./text-extraction-ocr): Uses OCR to extract text from scanned PDFs.
+
 
 ## Contributing
 
