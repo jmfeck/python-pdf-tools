@@ -31,12 +31,9 @@ path_log = os.path.join(path_log_folder, log_filename)
 
 # Set up logging
 os.makedirs(path_log_folder, exist_ok=True)
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(message)s',
-                    handlers=[
-                        logging.FileHandler(path_log),
-                        logging.StreamHandler(sys.stdout)
-                    ])
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+file_handler = logging.FileHandler(path_log)
+logging.getLogger().addHandler(file_handler)
 
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Merge PDF files by filename or creation date.")
