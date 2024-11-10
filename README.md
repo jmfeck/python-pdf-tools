@@ -10,7 +10,7 @@ The project is currently
 ## Functions
 
 - ❌ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
-- ❌ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
+- ✅ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
 - ❌ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [compare-pdf-files](./compare-pdf-files): Highlights differences between two PDF files.
 - ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
