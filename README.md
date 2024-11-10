@@ -21,7 +21,7 @@ The project is currently
 - ✅ [extract-images-from-pdf](./extract-images-from-pdf): Extracts images from PDF pages.
 - ✅ [extract-tables-from-pdf](./extract-tables-from-pdf): Extracts tables from PDFs into structured data formats.
 - ✅ [extract-text-from-pdf](./extract-text-from-pdf): Extracts raw text from PDF files.
-- ❌ [extract-text-from-pdf-ocr](./extract-text-from-pdf-ocr): Uses OCR to extract text from scanned PDFs.
+- ✅ [extract-text-from-pdf-ocr](./extract-text-from-pdf-ocr): Uses OCR to extract text from scanned PDFs.
 - ✅ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
