@@ -1,3 +1,3 @@
 call activate sandbox
-python scripts/page_size_adjustment.py
+python scripts/adjust_pdf_page_size.py  --size letter
 PAUSE

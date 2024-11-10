@@ -10,23 +10,23 @@ The project is currently in development, and functionalities are being implement
 
 - ✅ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
 - ✅ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
-- ❌ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages between A4 and Letter sizes.
+- ✅ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages e.g. A4 to letter.
 - ❌ [compare-pdf-files](./compare-pdf-files): Highlights differences between two PDF files.
 - ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
 - ❌ [convert-from-pdf](./convert-from-pdf): Converts PDFs into other formats like Word or Excel.
 - ❌ [convert-to-pdf](./convert-to-pdf): Converts various document types (e.g., images, Word) into PDFs.
-- ✅ [pdf-decryption](./pdf-decryption): Decrypts PDF files with a password.
-- ✅ [pdf-encryption](./pdf-encryption): Encrypts PDF files with a password.
 - ✅ [extract-images-from-pdf](./extract-images-from-pdf): Extracts images from PDF pages.
 - ✅ [extract-tables-from-pdf](./extract-tables-from-pdf): Extracts tables from PDFs into structured data formats.
 - ✅ [extract-text-from-pdf](./extract-text-from-pdf): Extracts raw text from PDF files.
 - ✅ [extract-text-from-pdf-ocr](./extract-text-from-pdf-ocr): Uses OCR to extract text from scanned PDFs.
 - ✅ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
-- ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
-- ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
+- ✅ [pdf-decryption](./pdf-decryption): Decrypts PDF files with a password.
+- ✅ [pdf-encryption](./pdf-encryption): Encrypts PDF files with a password.
+- ✅ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
+- ✅ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files - requires more testing.
 - ✅ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
-- ✅ [select-pdf](./select-pdf): Merges multiple PDF files into a single document.
+- ✅ [select-pdf](./select-pdf): Extracts specified pages from individual PDF files and merges them into a single output document containing only the selected pages from each file.
 - ✅ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
 
 
