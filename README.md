@@ -26,7 +26,8 @@ The project is currently in development, and functionalities are being implement
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
 - ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
 - ✅ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
-- ❌ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
+- ✅ [select-pdf](./select-pdf): Merges multiple PDF files into a single document.
+- ✅ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
 
 
 ## Contributing
