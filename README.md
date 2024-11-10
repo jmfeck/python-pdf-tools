@@ -4,12 +4,11 @@
 
 ## Current Status
 
-The project is currently
- in development, and functionalities are being implemented gradually. Each function is organized into its own folder within the repository, with individual `input`, `output`, and `scripts` folders to allow easy, modular usage of each tool.
+The project is currently in development, and functionalities are being implemented gradually. Each function is organized into its own folder within the repository, with individual `input`, `output`, and `scripts` folders to allow easy, modular usage of each tool.
 
 ## Functions
 
-- ❌ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
+- ✅ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
 - ✅ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
 - ❌ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages between A4 and Letter sizes.
 - ❌ [compare-pdf-files](./compare-pdf-files): Highlights differences between two PDF files.
@@ -26,7 +25,7 @@ The project is currently
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
 - ❌ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
 - ❌ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files.
-- ❌ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
+- ✅ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
 - ❌ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
 
 
