@@ -8,27 +8,34 @@ The project is currently in development, and functionalities are being implement
 
 ## Functions
 
-- ✅ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to a PDF document.
-- ✅ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds a watermark to PDF pages with custom text or images.
-- ✅ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts PDF pages e.g. A4 to letter.
+- ✅ [add-page-numbers-to-pdf](./add-page-numbers-to-pdf): Adds sequential page numbers to all pages in a PDF document.
+- ✅ [add-watermark-to-pdf](./add-watermark-to-pdf): Adds custom text or image watermarks to PDF pages.
+- ✅ [adjust-pdf-page-size](./adjust-pdf-page-size): Adjusts page size (e.g., A4 to Letter) to ensure PDF content fits the selected page dimensions.
 - ❌ [compare-pdf-files](./compare-pdf-files): Highlights differences between two PDF files.
-- ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents.
-- ❌ [convert-from-pdf](./convert-from-pdf): Converts PDFs into other formats like Word or Excel.
-- ❌ [convert-to-pdf](./convert-to-pdf): Converts various document types (e.g., images, Word) into PDFs.
-- ✅ [extract-images-from-pdf](./extract-images-from-pdf): Extracts images from PDF pages.
-- ✅ [extract-tables-from-pdf](./extract-tables-from-pdf): Extracts tables from PDFs into structured data formats.
+- ✅ [compress-pdf](./compress-pdf): Reduces the file size of PDF documents while maintaining quality.
+- ❌ [convert-from-pdf-to-doc](./convert-from-pdf-to-doc): Converts PDFs to Word format (DOC or DOCX).
+- ❌ [convert-from-pdf-to-epub](./convert-from-pdf-to-epub): Converts PDFs to EPUB format for e-readers.
+- ❌ [convert-from-pdf-to-img](./convert-from-pdf-to-img): Converts each PDF page into individual image files.
+- ✅ [convert-to-pdf-from-doc](./convert-to-pdf-from-doc): Converts Word documents (DOC or DOCX) to PDF.
+- ❌ [convert-to-pdf-from-epub](./convert-to-pdf-from-epub): Converts EPUB eBooks to PDF.
+- ❌ [convert-to-pdf-from-excel](./convert-to-pdf-from-excel): Converts Excel files to PDF, preserving layout.
+- ✅ [convert-to-pdf-from-html](./convert-to-pdf-from-html): Converts HTML files into PDF format, capturing webpage layout.
+- ✅ [convert-to-pdf-from-img](./convert-to-pdf-from-img): Converts various image files (JPG, PNG, TIFF, BMP) to single-page PDFs.
+- ❌ [convert-to-pdf-from-ppt](./convert-to-pdf-from-ppt): Converts PowerPoint presentations to PDF.
+- ✅ [convert-to-pdf-from-url](./convert-to-pdf-from-url): Converts the current view of webpages (from URLs) to PDFs for documentation.
+- ✅ [extract-images-from-pdf](./extract-images-from-pdf): Extracts embedded images from PDF pages.
+- ✅ [extract-tables-from-pdf](./extract-tables-from-pdf): Extracts tables and data structures from PDFs into structured data formats.
 - ✅ [extract-text-from-pdf](./extract-text-from-pdf): Extracts raw text from PDF files.
 - ✅ [extract-text-from-pdf-ocr](./extract-text-from-pdf-ocr): Uses OCR to extract text from scanned PDFs.
-- ✅ [flatten-pdf](./flatten-pdf): Flattens PDF content, making annotations or forms non-editable.
+- ✅ [flatten-pdf](./flatten-pdf): Makes PDF annotations or forms non-editable by flattening content layers.
 - ✅ [merge-pdf](./merge-pdf): Merges multiple PDF files into a single document.
-- ✅ [pdf-decryption](./pdf-decryption): Decrypts PDF files with a password.
-- ✅ [pdf-encryption](./pdf-encryption): Encrypts PDF files with a password.
+- ✅ [pdf-decryption](./pdf-decryption): Removes password protection from PDF files (if password is provided).
+- ✅ [pdf-encryption](./pdf-encryption): Adds password protection to PDF files.
 - ✅ [pdfa-conversion](./pdfa-conversion): Converts PDFs to PDF/A format for long-term archiving.
-- ✅ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files - requires more testing.
-- ✅ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the desired orientation.
-- ✅ [select-pdf](./select-pdf): Extracts specified pages from individual PDF files and merges them into a single output document containing only the selected pages from each file.
-- ✅ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on selected pages.
-
+- ✅ [repair-pdf](./repair-pdf): Attempts to repair damaged or corrupted PDF files; still under testing.
+- ✅ [rotate-pdf](./rotate-pdf): Rotates PDF pages to the specified orientation (e.g., 90, 180 degrees).
+- ✅ [select-pdf](./select-pdf): Extracts and merges specified pages from individual PDFs into a new document.
+- ✅ [split-pdf](./split-pdf): Splits a PDF into multiple documents based on user-defined page ranges.
 
 ## Contributing
 

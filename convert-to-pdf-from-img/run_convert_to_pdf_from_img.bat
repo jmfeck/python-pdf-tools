@@ -1,0 +1,3 @@
+call activate sandbox
+python scripts/convert_to_pdf_from_img.py
+PAUSE
