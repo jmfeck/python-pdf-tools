@@ -1,12 +1,3 @@
-#functions to be implemented
-convert-from-pdf-to-doc/
-convert-from-pdf-to-img/
-convert-from-pdf-to-epub/
-convert-to-pdf-from-epub/
-convert-to-pdf-from-excel/
-convert-to-pdf-from-ppt/
-compare-pdf-files/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
