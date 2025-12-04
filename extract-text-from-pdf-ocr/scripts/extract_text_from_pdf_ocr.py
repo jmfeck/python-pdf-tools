@@ -51,7 +51,7 @@ logging.info(f"Output folder: {path_output}")
 logging.info("Searching for PDF files in the input folder...")
 
 # List and count PDF files
-input_pdf_files = [f for f in os.listdir(path_input) if f.endswith(".pdf")]
+input_pdf_files = [f for f in os.listdir(path_input) if f.lower().endswith(".pdf")]
 input_num_pdfs = len(input_pdf_files)
 logging.info(f"Found {input_num_pdfs} PDF file(s) to process.")
 
