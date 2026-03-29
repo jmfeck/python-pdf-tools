@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -42,6 +43,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Convert HTML files to PDF.")
+parser.add_argument("--engine", type=str, choices=["pymupdf", "weasyprint", "playwright"], default="pymupdf",
+                    help="Rendering engine: 'pymupdf' (default, no external deps), 'weasyprint' (needs GTK), 'playwright' (headless Chromium)")
+args = parser.parse_args()
+
 logging.info("Starting HTML to PDF Conversion Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -68,7 +75,7 @@ for html_file in input_html_files:
         output_filename = f"{timestamp}_{html_file.split('.')[0]}.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        lz.read_html(html_path).to_pdf(output_path)
+        lz.read_html(html_path, engine=args.engine).to_pdf(output_path)
         logging.info(f"Converted {html_file} to PDF at {output_path}")
 
     except Exception as e:

@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -44,6 +45,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Flatten PDF files by rasterizing pages.")
+parser.add_argument("--dpi", type=int, default=150,
+                    help="Resolution in DPI for rasterization. Lower = smaller file, higher = better quality. Default: 150.")
+args = parser.parse_args()
+
 logging.info("Starting PDF Flattening Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -69,7 +76,7 @@ for pdf_file in input_pdf_files:
         os.makedirs(path_output, exist_ok=True)
         output_pdf_path = os.path.join(path_output, f"{timestamp}_flattened_{pdf_file}")
 
-        lz.read(pdf_path).flatten().to_pdf(output_pdf_path)
+        lz.read(pdf_path).flatten(dpi=args.dpi).to_pdf(output_pdf_path)
         logging.info(f"Flattened PDF saved as {output_pdf_path}")
 
     except Exception as e:

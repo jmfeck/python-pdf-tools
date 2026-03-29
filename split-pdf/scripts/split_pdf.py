@@ -92,7 +92,7 @@ for pdf_file in input_pdf_files:
             if page_num <= pdf.page_count:
                 output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page_{page_num}.pdf"
                 output_path = os.path.join(path_output, output_filename)
-                pdf.copy().extract_pages([page_num]).to_pdf(output_path)
+                pdf.copy().extract_pages([page_num]).compress().to_pdf(output_path)
                 logging.info(f"  - Saved page {page_num} as {output_filename}")
             else:
                 logging.warning(f"  - Page {page_num} is out of range for {pdf_file}")

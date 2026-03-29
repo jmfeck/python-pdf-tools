@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -42,6 +43,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Convert PDF files to PDF/A archival format.")
+parser.add_argument("--engine", type=str, choices=["pymupdf", "ghostscript"], default="pymupdf",
+                    help="Conversion engine: 'pymupdf' (default, no external deps), 'ghostscript' (most compliant, needs Ghostscript installed)")
+args = parser.parse_args()
+
 logging.info("Starting PDF/A Conversion Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -68,7 +75,7 @@ for pdf_file in input_pdf_files:
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_PDFA.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        lz.read(pdf_path).to_pdfa(output_path)
+        lz.read(pdf_path).to_pdfa(output_path, engine=args.engine)
         logging.info(f"Converted to PDF/A and saved as {output_filename}")
 
     except Exception as e:

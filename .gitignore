@@ -1,3 +1,10 @@
+# Local feature request notes
+LAZYPDF_FEATURE_REQUESTS.md
+
+# Tool outputs and logs (generated at runtime)
+**/output/
+**/logs/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

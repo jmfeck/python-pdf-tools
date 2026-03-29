@@ -69,7 +69,7 @@ for image_file in input_image_files:
         output_filename = f"{timestamp}_{image_file.split('.')[0]}.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        lz.read_images(image_path).to_pdf(output_path)
+        lz.read_images(image_path, page_size="fit").to_pdf(output_path)
         logging.info(f"Converted {image_file} to PDF at {output_path}")
 
     except Exception as e:

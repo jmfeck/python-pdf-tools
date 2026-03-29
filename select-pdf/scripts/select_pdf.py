@@ -89,7 +89,7 @@ for pdf_file in input_pdf_files:
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_selected_pages.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        lz.read(pdf_path).extract_pages(page_numbers).to_pdf(output_path)
+        lz.read(pdf_path).extract_pages(page_numbers).compress().to_pdf(output_path)
         logging.info(f"Selected pages saved to {output_filename}")
 
     except Exception as e:

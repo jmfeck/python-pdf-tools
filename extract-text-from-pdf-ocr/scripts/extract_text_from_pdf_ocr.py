@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -42,10 +43,19 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Extract text from PDF files using OCR.")
+parser.add_argument("--engine", type=str, choices=["text", "ocr", "auto"], default="auto",
+                    help="Extraction engine: 'text' (text layer only), 'ocr' (force OCR), 'auto' (default, text with OCR fallback per page)")
+parser.add_argument("--page-separator", type=str, default="\n--- Page {n} ---\n",
+                    help="Separator between pages. Use {n} for page number. Set to '' for no separator.")
+args = parser.parse_args()
+
 logging.info("Starting OCR Text Extraction Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
+logging.info(f"Engine: {args.engine}")
 logging.info("Searching for PDF files in the input folder...")
 
 # List and count PDF files
@@ -65,7 +75,12 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        pdf_text = lz.read(pdf_path).ocr().extract_text()
+
+        page_sep = args.page_separator if args.page_separator else None
+        pdf_text = lz.read(pdf_path).extract_text(
+            engine=args.engine,
+            page_separator=page_sep
+        )
 
         if pdf_text.strip():
             output_filename = f"{timestamp}_{pdf_file.split('.')[0]}.txt"
