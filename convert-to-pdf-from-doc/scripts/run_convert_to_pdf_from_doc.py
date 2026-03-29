@@ -9,8 +9,8 @@
 import os
 import sys
 import logging
+import lazypdf as lz
 from datetime import datetime
-import comtypes.client  # for Windows-based Word to PDF conversion
 
 # Program name for log prefix
 PROGRAM_NAME = "DOC to PDF Converter"
@@ -65,19 +65,10 @@ for doc_file in input_doc_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        
-        # Define the output path
         output_filename = f"{timestamp}_{doc_file.split('.')[0]}.pdf"
         output_path = os.path.join(path_output, output_filename)
-        
-        # Convert DOC/DOCX to PDF using comtypes (for Windows)
-        word = comtypes.client.CreateObject('Word.Application')
-        word.Visible = False
-        doc = word.Documents.Open(doc_path)
-        doc.SaveAs(output_path, FileFormat=17)  # 17 is the format code for PDF
-        doc.Close()
-        word.Quit()
 
+        lz.read_docx(doc_path).to_pdf(output_path)
         logging.info(f"Converted {doc_file} to PDF at {output_path}")
 
     except Exception as e:

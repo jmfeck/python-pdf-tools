@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -56,19 +56,18 @@ logging.info(f"Output folder: {path_output}")
 logging.info(f"Page ranges: {args.pages}")
 logging.info("Searching for PDF files in the input folder...")
 
-# Parse page ranges
+# Parse page ranges (1-indexed, matching lazypdf convention)
 def parse_page_ranges(page_ranges):
-    ranges = []
+    pages = []
     for part in page_ranges.split(','):
         if '-' in part:
             start, end = map(int, part.split('-'))
-            ranges.append((start - 1, end - 1))  # Convert to 0-based index
+            pages.extend(range(start, end + 1))
         else:
-            page_num = int(part) - 1  # Convert to 0-based index
-            ranges.append((page_num, page_num))
-    return ranges
+            pages.append(int(part))
+    return sorted(set(pages))
 
-page_ranges = parse_page_ranges(args.pages)
+page_numbers = parse_page_ranges(args.pages)
 
 # List and count PDF files
 input_pdf_files = [f for f in os.listdir(path_input) if f.endswith(".pdf")]
@@ -87,26 +86,11 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
-        selected_doc = fitz.open()  # Empty document for selected pages
+        output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_selected_pages.pdf"
+        output_path = os.path.join(path_output, output_filename)
 
-        # Add specified pages to the individual selected document
-        for start_page, end_page in page_ranges:
-            if start_page < len(doc) and end_page < len(doc):
-                selected_doc.insert_pdf(doc, from_page=start_page, to_page=end_page)
-                logging.info(f"  - Added pages {start_page + 1}-{end_page + 1} from {pdf_file}")
-            else:
-                logging.warning(f"  - Page range {start_page + 1}-{end_page + 1} is out of range for {pdf_file}")
-
-        # Save the selected pages as a new PDF
-        if len(selected_doc) > 0:
-            output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_selected_pages.pdf"
-            output_path = os.path.join(path_output, output_filename)
-            selected_doc.save(output_path)
-            selected_doc.close()
-            logging.info(f"Selected pages saved to {output_filename}")
-        else:
-            logging.warning(f"No pages were added to the output for {pdf_file}.")
+        lz.read(pdf_path).extract_pages(page_numbers).to_pdf(output_path)
+        logging.info(f"Selected pages saved to {output_filename}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")

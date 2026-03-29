@@ -9,9 +9,8 @@
 import os
 import sys
 import logging
+import lazypdf as lz
 from datetime import datetime
-from PIL import Image
-import fitz  # PyMuPDF
 
 # Program name for log prefix
 PROGRAM_NAME = "Image to PDF Converter"
@@ -67,40 +66,11 @@ for image_file in input_image_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        
-        # Open the image using Pillow
-        with Image.open(image_path) as img:
-            # Convert image to RGB (strip transparency if necessary) for PDF compatibility
-            if img.mode in ("RGBA", "LA") or (img.mode == "P" and "transparency" in img.info):
-                logging.info(f"Converting image {image_file} from {img.mode} to RGB")
-                img_rgb = Image.new("RGB", img.size, (255, 255, 255))  # White background
-                img_rgb.paste(img, mask=img.split()[3] if img.mode == "RGBA" else None)
-            else:
-                img_rgb = img.convert("RGB")
+        output_filename = f"{timestamp}_{image_file.split('.')[0]}.pdf"
+        output_path = os.path.join(path_output, output_filename)
 
-            width, height = img_rgb.size
-            
-            # Create a new PDF document and add a page with the image dimensions
-            output_filename = f"{timestamp}_{image_file.split('.')[0]}.pdf"
-            output_path = os.path.join(path_output, output_filename)
-            
-            doc = fitz.open()  # Create a new PDF
-            page = doc.new_page(width=width, height=height)
-
-            # Save image as a temporary JPEG file to insert into PDF
-            temp_image_path = "temp_image.jpg"
-            img_rgb.save(temp_image_path, "JPEG")
-            img_pixmap = fitz.Pixmap(temp_image_path)
-            
-            # Insert the image as a full-page in the PDF
-            page.insert_image(fitz.Rect(0, 0, width, height), pixmap=img_pixmap)
-            
-            # Save and clean up
-            doc.save(output_path)
-            doc.close()
-            os.remove(temp_image_path)  # Remove temporary image file
-            
-            logging.info(f"Converted {image_file} to PDF at {output_path}")
+        lz.read_images(image_path).to_pdf(output_path)
+        logging.info(f"Converted {image_file} to PDF at {output_path}")
 
     except Exception as e:
         logging.error(f"Failed to process {image_file} - {e}")

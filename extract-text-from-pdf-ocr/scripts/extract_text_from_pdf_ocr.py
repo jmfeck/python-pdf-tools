@@ -9,13 +9,11 @@
 import os
 import sys
 import logging
-import fitz  # PyMuPDF
-import pytesseract
+import lazypdf as lz
 from datetime import datetime
-from PIL import Image
 
 # Program name for log prefix
-PROGRAM_NAME = "PDF OCR Text Extractor with PyMuPDF"
+PROGRAM_NAME = "PDF OCR Text Extractor"
 
 # Set up timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -67,26 +65,8 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
-        
-        # Extract text from each page and perform OCR if necessary
-        pdf_text = ""
-        for page_num in range(len(doc)):
-            page = doc[page_num]
-            page_text = page.get_text("text")
+        pdf_text = lz.read(pdf_path).ocr().extract_text()
 
-            # If text extraction fails, convert to image and perform OCR
-            if not page_text.strip():
-                logging.info(f"Page {page_num + 1} appears to be scanned. Attempting OCR.")
-                # Render page as an image for OCR
-                pix = page.get_pixmap(dpi=150)  # 150 dpi for decent OCR accuracy
-                img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-                page_text = pytesseract.image_to_string(img)
-
-            if page_text.strip():  # Only add non-empty text
-                pdf_text += f"\n\n--- Page {page_num + 1} ---\n{page_text.strip()}"
-
-        # Skip saving if text is empty
         if pdf_text.strip():
             output_filename = f"{timestamp}_{pdf_file.split('.')[0]}.txt"
             output_path = os.path.join(path_output, output_filename)

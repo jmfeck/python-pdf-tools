@@ -9,7 +9,7 @@
 import os
 import sys
 import logging
-from pypdf import PdfReader
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -65,16 +65,8 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        reader = PdfReader(pdf_path)
-        
-        # Extract text from each page and concatenate
-        pdf_text = ""
-        for page_num, page in enumerate(reader.pages, start=1):
-            page_text = page.extract_text() or ""
-            if page_text.strip():  # Check if page text is not empty
-                pdf_text += f"\n\n--- Page {page_num} ---\n{page_text.strip()}"
+        pdf_text = lz.read(pdf_path).extract_text()
 
-        # Skip saving if text is empty
         if pdf_text.strip():
             output_filename = f"{timestamp}_{pdf_file.split('.')[0]}.txt"
             output_path = os.path.join(path_output, output_filename)

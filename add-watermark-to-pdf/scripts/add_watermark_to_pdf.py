@@ -10,9 +10,8 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 from datetime import datetime
-from PIL import Image
 
 # Program name for log prefix
 PROGRAM_NAME = "PDF Background Watermark Adder"
@@ -47,7 +46,7 @@ logging.getLogger().addHandler(file_handler)
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Add an image watermark to the background of each page in PDF files.")
 parser.add_argument("--watermark-path", type=str, required=True, help="Path to the image watermark file.")
-parser.add_argument("--watermark-transparency", type=float, default=0.5, help="Transparency level of the watermark (0.0 to 1.0). Default is 0.3.")
+parser.add_argument("--watermark-transparency", type=float, default=0.5, help="Transparency level of the watermark (0.0 to 1.0). Default is 0.5.")
 args = parser.parse_args()
 
 # Verify watermark file
@@ -64,18 +63,6 @@ if not input_pdf_files:
     logging.warning("No PDF files found in the input folder. Exiting.")
     sys.exit()
 
-# Open watermark image and apply transparency
-try:
-    with Image.open(watermark_path) as img:
-        img = img.convert("RGBA")
-        alpha = int(args.watermark_transparency * 255)  # Scale alpha to 0-255
-        img.putalpha(alpha)
-        watermark_img_path = "temp_watermark.png"
-        img.save(watermark_img_path)
-except Exception as e:
-    logging.error(f"Failed to process image watermark - {e}")
-    sys.exit()
-
 # Apply the watermark as a background
 for pdf_file in input_pdf_files:
     pdf_path = os.path.join(path_input, pdf_file)
@@ -83,28 +70,16 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
-
-        # Add watermark as a background to each page
-        for page_num in range(len(doc)):
-            page = doc[page_num]
-            rect = page.rect  # Get page dimensions
-
-            # Place the image watermark as a background
-            page.insert_image(rect, filename=watermark_img_path, keep_proportion=True, overlay=False)
-            logging.info(f"  - Added watermark to background of page {page_num + 1}")
-
-        # Save the watermarked PDF
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_watermarked.pdf"
         output_path = os.path.join(path_output, output_filename)
-        doc.save(output_path)
+
+        lz.read(pdf_path).add_image_watermark(
+            watermark_path, opacity=args.watermark_transparency, overlay=False
+        ).to_pdf(output_path)
         logging.info(f"Watermarked PDF saved to {output_filename}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")
-
-# Cleanup temporary watermark image file
-os.remove(watermark_img_path)
 
 logging.info("PDF Background Watermark Addition Process Completed Successfully")
 logging.info(f"Total PDF files processed: {len(input_pdf_files)}")

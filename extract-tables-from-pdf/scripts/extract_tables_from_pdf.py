@@ -10,12 +10,12 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 import pandas as pd
 from datetime import datetime
 
 # Program name for log prefix
-PROGRAM_NAME = "PDF Table Extractor with PyMuPDF"
+PROGRAM_NAME = "PDF Table Extractor"
 
 # Set up timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -50,7 +50,7 @@ parser.add_argument("--export-format", type=str, choices=["csv", "excel"], defau
                     help="Output format for the extracted tables: 'csv' or 'excel' (default: csv)")
 args = parser.parse_args()
 
-logging.info("Starting PDF Table Extraction Process with PyMuPDF")
+logging.info("Starting PDF Table Extraction Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
@@ -74,36 +74,23 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)  # Open the PDF document with PyMuPDF
-        
-        for page_num in range(doc.page_count):
-            page = doc[page_num]
-            logging.info(f"Processing page {page_num + 1}")
-            
-            # Extract text blocks (can approximate table structure)
-            blocks = page.get_text("blocks")
-            table_data = []
+        tables = lz.read(pdf_path).extract_tables()
 
-            for block in blocks:
-                if len(block) >= 5:  # Ensure block has enough values
-                    text = block[4]  # Text content
-                    if text.strip():  # Skip empty blocks
-                        rows = text.splitlines()
-                        table_data.append(rows)
+        if tables:
+            for table_index, table in enumerate(tables, start=1):
+                output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_table{table_index}"
+                df = pd.DataFrame(table[1:], columns=table[0] if table else None)
 
-            # Only proceed if we have valid table data meeting the minimum size requirement
-            if table_data:
-                output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page{page_num + 1}"
-                
-                # Save table data as CSV or Excel
                 if args.export_format == "csv":
                     output_path = os.path.join(path_output, f"{output_filename}.csv")
-                    pd.DataFrame(table_data).to_csv(output_path, index=False, header=False)
-                    logging.info(f"Table on page {page_num + 1} saved as CSV: {output_path}")
+                    df.to_csv(output_path, index=False)
+                    logging.info(f"Table {table_index} saved as CSV: {output_filename}.csv")
                 elif args.export_format == "excel":
                     output_path = os.path.join(path_output, f"{output_filename}.xlsx")
-                    pd.DataFrame(table_data).to_excel(output_path, index=False, header=False)
-                    logging.info(f"Table on page {page_num + 1} saved as Excel: {output_path}")
+                    df.to_excel(output_path, index=False)
+                    logging.info(f"Table {table_index} saved as Excel: {output_filename}.xlsx")
+        else:
+            logging.info(f"No tables found in {pdf_file}.")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")

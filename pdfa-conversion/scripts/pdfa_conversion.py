@@ -9,7 +9,7 @@
 import os
 import sys
 import logging
-import subprocess
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -65,31 +65,11 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-
-        # Define output file path
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_PDFA.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        gs_executable = "gswin64c" if os.name == 'nt' else "gs"
-        gs_command = [
-            gs_executable,
-            "-dPDFA=2",
-            "-dBATCH",
-            "-dNOPAUSE",
-            "-dSAFER",
-            "-sDEVICE=pdfwrite",
-            "-dCompatibilityLevel=1.4",
-            "-sOutputFile=" + output_path,
-            "-dPDFACompatibilityPolicy=1",
-            pdf_path
-        ]
-        
-        # Run Ghostscript command
-        result = subprocess.run(gs_command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        if result.returncode == 0:
-            logging.info(f"Converted to PDF/A and saved as {output_filename}")
-        else:
-            logging.warning(f"Conversion failed for {pdf_file} with return code {result.returncode}")
+        lz.read(pdf_path).to_pdfa(output_path)
+        logging.info(f"Converted to PDF/A and saved as {output_filename}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")

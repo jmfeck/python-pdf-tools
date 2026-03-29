@@ -10,7 +10,7 @@ import os
 import sys
 import argparse
 import logging
-from pypdf import PdfWriter
+import lazypdf as lz
 from datetime import datetime
 
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -37,7 +37,7 @@ logging.getLogger().addHandler(file_handler)
 
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Merge PDF files by filename or creation date.")
-parser.add_argument("--sort", choices=["filename", "date"], default="filename", 
+parser.add_argument("--sort", choices=["filename", "date"], default="filename",
                     help="Sort order for merging: 'filename' or 'date'")
 args = parser.parse_args()
 
@@ -62,13 +62,12 @@ elif args.sort == "date":
     input_pdf_files.sort(key=lambda f: os.path.getctime(os.path.join(path_input, f)))  # Sort by creation date
     logging.info("PDF Merger: Sorting by creation date")
 
-# Initialize PdfMerger and start merging files
-merger = PdfWriter()
+# Build full paths for merging
+pdf_paths = [os.path.join(path_input, f) for f in input_pdf_files]
+
 logging.info("PDF Merger: Merging files...")
 for pdf_file in input_pdf_files:
-    pdf_path = os.path.join(path_input, pdf_file)
     logging.info(f"PDF Merger: Merging {pdf_file}")
-    merger.append(pdf_path)
 
 # Generate a timestamped filename for the output PDF
 output_filename = f"{timestamp}_merged_pdf.pdf"
@@ -77,7 +76,6 @@ output_path = os.path.join(path_output, output_filename)
 # Ensure the output folder exists and save the merged file
 os.makedirs(path_output, exist_ok=True)
 logging.info(f"PDF Merger: Exporting merged PDF to {output_path}")
-merger.write(output_path)
-merger.close()
+lz.merge(*pdf_paths).to_pdf(output_path)
 
 logging.info("PDF Merger: Process completed successfully.")

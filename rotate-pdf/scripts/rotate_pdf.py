@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -55,7 +55,7 @@ logging.info("Starting PDF Page Rotation Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
-logging.info(f"Rotation degrees: {rotation_degrees}°")
+logging.info(f"Rotation degrees: {rotation_degrees}")
 logging.info("Searching for PDF files in the input folder...")
 
 # List and count PDF files
@@ -75,17 +75,10 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
-
-        # Rotate each page
-        for page_num, page in enumerate(doc, start=1):
-            page.set_rotation(rotation_degrees)
-            logging.info(f"  - Rotated page {page_num} by {rotation_degrees}°")
-
-        # Save the rotated PDF
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_rotated_{rotation_degrees}.pdf"
         output_path = os.path.join(path_output, output_filename)
-        doc.save(output_path)
+
+        lz.read(pdf_path).rotate(rotation_degrees).to_pdf(output_path)
         logging.info(f"Rotated PDF saved to {output_filename}")
 
     except Exception as e:

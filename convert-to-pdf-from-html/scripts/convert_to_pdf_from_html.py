@@ -9,8 +9,7 @@
 import os
 import sys
 import logging
-import argparse
-import pdfkit
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -66,13 +65,10 @@ for html_file in input_html_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        
-        # Define the output PDF file path
         output_filename = f"{timestamp}_{html_file.split('.')[0]}.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        # Convert HTML to PDF
-        pdfkit.from_file(html_path, output_path)
+        lz.read_html(html_path).to_pdf(output_path)
         logging.info(f"Converted {html_file} to PDF at {output_path}")
 
     except Exception as e:

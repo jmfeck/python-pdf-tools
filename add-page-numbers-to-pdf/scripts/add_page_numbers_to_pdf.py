@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -49,19 +49,6 @@ parser.add_argument("--position", type=str, choices=["top-left", "top-right", "b
                     default="bottom-right", help="Position to add page numbers: 'top-left', 'top-right', 'bottom-left', 'bottom-right' (default: bottom-right)")
 args = parser.parse_args()
 
-# Define positions based on argument
-def get_position(page, position):
-    width, height = page.rect.width, page.rect.height
-    margin = 15
-    if position == "top-left":
-        return margin, margin + 10
-    elif position == "top-right":
-        return width - margin, margin + 10
-    elif position == "bottom-left":
-        return margin, height - margin
-    elif position == "bottom-right":
-        return width - margin, height - margin
-
 logging.info("Starting Page Number Addition Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -86,18 +73,10 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
-        
-        # Add page numbers to each page
-        for page_num, page in enumerate(doc, start=1):
-            x, y = get_position(page, args.position)
-            page.insert_text((x, y), f"{page_num}", fontsize=12, rotate=0, color=(0, 0, 0), fontname="helv")
-            logging.info(f"  - Added page number {page_num} to {args.position} of page {page_num}")
-
-        # Save the updated PDF
         output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_numbered.pdf"
         output_path = os.path.join(path_output, output_filename)
-        doc.save(output_path)
+
+        lz.read(pdf_path).add_page_numbers(position=args.position).to_pdf(output_path)
         logging.info(f"Page-numbered PDF saved to {output_filename}")
 
     except Exception as e:

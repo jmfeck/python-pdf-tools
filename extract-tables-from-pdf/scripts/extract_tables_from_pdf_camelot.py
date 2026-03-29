@@ -10,7 +10,8 @@ import os
 import sys
 import logging
 import argparse
-import camelot
+import lazypdf as lz
+import pandas as pd
 from datetime import datetime
 
 # Program name for log prefix
@@ -47,16 +48,17 @@ logging.getLogger().addHandler(file_handler)
 parser = argparse.ArgumentParser(description="Extract tables from PDF files and save in CSV or Excel format.")
 parser.add_argument("--export-format", type=str, choices=["csv", "excel"], default="csv",
                     help="Output format for the extracted tables: 'csv' or 'excel' (default: csv)")
-parser.add_argument("--flavor", type=str, choices=["stream", "lattice"], default="lattice",
-                    help="Table extraction method: 'lattice' for tables with borders, 'stream' for tables without (default: lattice)")
 args = parser.parse_args()
 
-logging.info("Starting PDF Table Extraction Process with Camelot")
+# TODO: Once lazypdf supports extraction flavors, restore argparse and use:
+#   parser.add_argument("--flavor", type=str, choices=["stream", "lattice"], default="lattice")
+#   lz.read(pdf_path).extract_tables(flavor=args.flavor)
+
+logging.info("Starting PDF Table Extraction Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
 logging.info(f"Output folder: {path_output}")
 logging.info(f"Output format: {args.export_format}")
-logging.info(f"Extraction flavor: {args.flavor}")
 logging.info("Searching for PDF files in the input folder...")
 
 # List and count PDF files
@@ -76,25 +78,26 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        
-        # Extract tables with camelot
-        tables = camelot.read_pdf(pdf_path, flavor=args.flavor, pages="all")
-        
+        tables = lz.read(pdf_path).extract_tables()
+
         if tables:
             for table_index, table in enumerate(tables, start=1):
                 try:
-                    page_number = table.page
-                    output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page{page_number}_table{table_index}"                
+                    output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_table{table_index}"
+                    df = pd.DataFrame(table[1:], columns=table[0] if table else None)
+
                     if args.export_format == "csv":
                         output_path = os.path.join(path_output, f"{output_filename}.csv")
-                        table.to_csv(output_path, index=False)
+                        df.to_csv(output_path, index=False)
                         logging.info(f"Table {table_index} saved as CSV: {output_filename}.csv")
                     elif args.export_format == "excel":
                         output_path = os.path.join(path_output, f"{output_filename}.xlsx")
-                        table.to_excel(output_path, index=False)
+                        df.to_excel(output_path, index=False)
                         logging.info(f"Table {table_index} saved as Excel: {output_filename}.xlsx")
                 except Exception as e:
                     logging.error(f"Failed to save table {table_index} - {e}")
+        else:
+            logging.info(f"No tables found in {pdf_file}.")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")
