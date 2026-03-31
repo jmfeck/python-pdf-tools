@@ -48,11 +48,10 @@ logging.getLogger().addHandler(file_handler)
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Encrypt PDF files with a password.")
 parser.add_argument("--password", type=str, required=True, help="Password to encrypt the output PDF files.")
+parser.add_argument("--algorithm", type=str, default="AES-256-R5",
+                    choices=["AES-256-R5", "AES-256", "AES-128", "RC4-128", "RC4-40"],
+                    help="Encryption algorithm. Default: AES-256-R5.")
 args = parser.parse_args()
-
-# TODO: Once lazypdf supports algorithm selection, restore argparse and use:
-#   parser.add_argument("--encryption-algo", type=str, default="AES-256-R5")
-#   lz.read(pdf_path).encrypt(args.password, algorithm=args.encryption_algo).to_pdf(...)
 
 logging.info("Starting Process")
 logging.info(f"Timestamp: {timestamp}")
@@ -79,7 +78,7 @@ for pdf_file in input_pdf_files:
         os.makedirs(path_output, exist_ok=True)
         encrypted_output_path = os.path.join(path_output, f"{timestamp}_encrypted_{pdf_file}")
 
-        lz.read(pdf_path).encrypt(args.password).to_pdf(encrypted_output_path)
+        lz.read(pdf_path).encrypt(args.password, algorithm=args.algorithm).to_pdf(encrypted_output_path)
         logging.info(f"Encrypted PDF saved as {encrypted_output_path}")
 
     except Exception as e:

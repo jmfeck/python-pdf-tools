@@ -47,8 +47,8 @@ logging.getLogger().addHandler(file_handler)
 
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Flatten PDF files by rasterizing pages.")
-parser.add_argument("--dpi", type=int, default=150,
-                    help="Resolution in DPI for rasterization. Lower = smaller file, higher = better quality. Default: 150.")
+parser.add_argument("--dpi", type=int, default=72,
+                    help="Resolution in DPI for rasterization. Lower = smaller file, higher = better quality. Default: 72.")
 args = parser.parse_args()
 
 logging.info("Starting PDF Flattening Process")

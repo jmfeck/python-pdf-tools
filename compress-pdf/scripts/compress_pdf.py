@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -35,10 +36,13 @@ logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 file_handler = logging.FileHandler(path_log)
 logging.getLogger().addHandler(file_handler)
 
-# TODO: Once lazypdf supports granular compression params, restore argparse and use:
-#   parser.add_argument("--img-quality", type=int, choices=range(1, 100))
-#   parser.add_argument("--compression-level", type=int, choices=range(1, 10), default=5)
-#   lz.read(pdf_path).compress(img_quality=args.img_quality, compression_level=args.compression_level).to_pdf(...)
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Compress PDF files.")
+parser.add_argument("--img-quality", type=int, default=None,
+                    help="Quality level for image recompression (1-100). Omit to skip image compression.")
+parser.add_argument("--compression-level", type=int, default=5, choices=range(1, 10),
+                    help="Deflate compression level for content streams (1-9). Default: 5.")
+args = parser.parse_args()
 
 logging.info("PDF Compressor: Starting")
 logging.info("PDF Compressor: Searching for PDF files to compress in the input folder...")
@@ -63,7 +67,7 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        lz.read(pdf_path).compress().to_pdf(compressed_output_path)
+        lz.read(pdf_path).compress(img_quality=args.img_quality, compression_level=args.compression_level).to_pdf(compressed_output_path)
         logging.info(f"PDF Compressor: Compressed PDF saved to {compressed_output_path}")
     except Exception as e:
         logging.error(f"PDF Compressor: Failed to compress {pdf_file} - {e}")

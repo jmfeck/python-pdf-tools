@@ -1,0 +1,2 @@
+lazypdf>=0.2.0
+pandas

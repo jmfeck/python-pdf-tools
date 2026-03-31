@@ -48,11 +48,9 @@ logging.getLogger().addHandler(file_handler)
 parser = argparse.ArgumentParser(description="Extract tables from PDF files and save in CSV or Excel format.")
 parser.add_argument("--export-format", type=str, choices=["csv", "excel"], default="csv",
                     help="Output format for the extracted tables: 'csv' or 'excel' (default: csv)")
+parser.add_argument("--flavor", type=str, choices=["stream", "lattice"], default="lattice",
+                    help="Table detection strategy: 'lattice' (tables with borders) or 'stream' (borderless). Default: lattice.")
 args = parser.parse_args()
-
-# TODO: Once lazypdf supports extraction flavors, restore argparse and use:
-#   parser.add_argument("--flavor", type=str, choices=["stream", "lattice"], default="lattice")
-#   lz.read(pdf_path).extract_tables(flavor=args.flavor)
 
 logging.info("Starting PDF Table Extraction Process")
 logging.info(f"Timestamp: {timestamp}")
@@ -78,7 +76,7 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        tables = lz.read(pdf_path).extract_tables()
+        tables = lz.read(pdf_path).extract_tables(flavor=args.flavor)
 
         if tables:
             for table_index, table in enumerate(tables, start=1):
