@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import argparse
 import lazypdf as lz
 from datetime import datetime
 
@@ -42,6 +43,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Repair corrupted PDF files.")
+parser.add_argument("--engine", type=str, choices=["pymupdf", "pikepdf", "auto"], default="auto",
+                    help="Repair engine: 'auto' (default, tries all), 'pymupdf', 'pikepdf'")
+args = parser.parse_args()
+
 logging.info("Starting PDF Repair Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -67,7 +74,7 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        lz.read(pdf_path).repair().to_pdf(output_path)
+        lz.read(pdf_path).repair(engine=args.engine).to_pdf(output_path)
         logging.info(f"Repaired PDF saved to {output_path}")
     except Exception as e:
         logging.error(f"Failed to repair {pdf_file} - {e}")
