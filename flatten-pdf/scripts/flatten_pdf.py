@@ -9,7 +9,8 @@
 import os
 import sys
 import logging
-import fitz  # PyMuPDF for flattening PDF content
+import argparse
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -44,6 +45,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Flatten PDF files by rasterizing pages.")
+parser.add_argument("--dpi", type=int, default=72,
+                    help="Resolution in DPI for rasterization. Lower = smaller file, higher = better quality. Default: 72.")
+args = parser.parse_args()
+
 logging.info("Starting PDF Flattening Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input folder: {path_input}")
@@ -67,29 +74,9 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        
-        # Open the PDF and create a new document for flattened output
-        doc = fitz.open(pdf_path)
         output_pdf_path = os.path.join(path_output, f"{timestamp}_flattened_{pdf_file}")
 
-        # Flatten each page by rendering it and saving the result
-        flattened_doc = fitz.open()  # Create a new PDF to save flattened pages
-        for page_num in range(len(doc)):
-            page = doc.load_page(page_num)
-            
-            # Render the page to an image to flatten it
-            pix = page.get_pixmap()  # Creates a pixmap image of the page
-            flattened_page = flattened_doc.new_page(width=page.rect.width, height=page.rect.height)
-            
-            # Insert the rendered image as a single layer
-            flattened_page.insert_image(page.rect, pixmap=pix)
-            logging.info(f"Flattened page {page_num + 1} of {pdf_file}")
-
-        # Save the flattened PDF
-        flattened_doc.save(output_pdf_path)
-        flattened_doc.close()
-        doc.close()
-
+        lz.read(pdf_path).flatten(dpi=args.dpi).to_pdf(output_pdf_path)
         logging.info(f"Flattened PDF saved as {output_pdf_path}")
 
     except Exception as e:

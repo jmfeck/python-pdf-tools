@@ -10,8 +10,8 @@ import os
 import sys
 import logging
 import argparse
+import lazypdf as lz
 from datetime import datetime
-from pypdf import PdfWriter
 
 # Timestamp for file and log naming
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -34,16 +34,14 @@ path_log = os.path.join(path_log_folder, log_filename)
 os.makedirs(path_log_folder, exist_ok=True)
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 file_handler = logging.FileHandler(path_log)
-#console_handler = logging.StreamHandler(sys.stdout)
 logging.getLogger().addHandler(file_handler)
-#logging.getLogger().addHandler(console_handler)
 
 # Argument parser setup
-parser = argparse.ArgumentParser(description="Compress PDF files and optionally set image quality.")
-parser.add_argument("--img-quality", type=int, choices=range(1, 100),
-                    help="Set the quality level for image compression (0-100). If not provided, image compression is skipped.")
-parser.add_argument("--compression-level", type=int, choices=range(1, 10), default=5,
-                    help="Set the compression level for content streams (1-9). Default is 5.")
+parser = argparse.ArgumentParser(description="Compress PDF files.")
+parser.add_argument("--img-quality", type=int, default=None,
+                    help="Quality level for image recompression (1-100). Omit to skip image compression.")
+parser.add_argument("--compression-level", type=int, default=5, choices=range(1, 10),
+                    help="Deflate compression level for content streams (1-9). Default: 5.")
 args = parser.parse_args()
 
 logging.info("PDF Compressor: Starting")
@@ -65,28 +63,11 @@ for pdf_file in input_pdf_files:
     compressed_output_filename = f"{timestamp}_compressed_{pdf_file}"
     compressed_output_path = os.path.join(path_output, compressed_output_filename)
 
-    if args.img_quality is not None:
-        logging.info(f"PDF Compressor: Compressing {pdf_file} with image quality {args.img_quality}")
-    else:
-        logging.info(f"PDF Compressor: Compressing {pdf_file} without image quality adjustment")
-    logging.info(f"PDF Compressor: Using compression level {args.compression_level} for content streams")
+    logging.info(f"PDF Compressor: Compressing {pdf_file}")
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        writer = PdfWriter(clone_from=pdf_path)
-        
-        writer.compress_identical_objects(remove_identicals=True, remove_orphans=True)
-        
-        for page in writer.pages:
-            if args.img_quality is not None:
-                for img in page.images:
-                    img.replace(img.image, quality=args.img_quality)
-
-            page.compress_content_streams(level=args.compression_level)
-
-        with open(compressed_output_path, "wb") as f:
-            writer.write(f)
-        
+        lz.read(pdf_path).compress(img_quality=args.img_quality, compression_level=args.compression_level).to_pdf(compressed_output_path)
         logging.info(f"PDF Compressor: Compressed PDF saved to {compressed_output_path}")
     except Exception as e:
         logging.error(f"PDF Compressor: Failed to compress {pdf_file} - {e}")

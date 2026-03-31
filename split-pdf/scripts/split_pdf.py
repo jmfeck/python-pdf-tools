@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-import fitz  # PyMuPDF
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -46,7 +46,7 @@ logging.getLogger().addHandler(file_handler)
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Split PDF files into separate files based on specified page ranges.")
 parser.add_argument("--pages", type=str, required=True,
-                    help="Page ranges to split, e.g., '1-3,5,7-9'.")
+                    help="Page ranges to split, e.g., '1-3,5,7-9'. Each page becomes a separate file.")
 args = parser.parse_args()
 
 logging.info("Starting PDF Splitting Process")
@@ -56,16 +56,16 @@ logging.info(f"Output folder: {path_output}")
 logging.info(f"Page ranges: {args.pages}")
 logging.info("Searching for PDF files in the input folder...")
 
-# Parse page ranges
+# Parse page ranges (1-indexed, matching lazypdf convention)
 def parse_page_ranges(page_ranges):
-    ranges = []
+    pages = []
     for part in page_ranges.split(','):
         if '-' in part:
             start, end = map(int, part.split('-'))
-            ranges.extend(range(start - 1, end))  # Convert to 0-based index
+            pages.extend(range(start, end + 1))
         else:
-            ranges.append(int(part) - 1)  # Convert to 0-based index
-    return sorted(set(ranges))
+            pages.append(int(part))
+    return sorted(set(pages))
 
 page_numbers = parse_page_ranges(args.pages)
 
@@ -86,20 +86,16 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        doc = fitz.open(pdf_path)
+        pdf = lz.read(pdf_path)
 
-        # Split PDF based on page numbers
-        for i, page_num in enumerate(page_numbers, start=1):
-            if page_num < len(doc):
-                split_doc = fitz.open()  # Create a new PDF
-                split_doc.insert_pdf(doc, from_page=page_num, to_page=page_num)
-                output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page_{page_num + 1}.pdf"
+        for page_num in page_numbers:
+            if page_num <= pdf.page_count:
+                output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_page_{page_num}.pdf"
                 output_path = os.path.join(path_output, output_filename)
-                split_doc.save(output_path)
-                split_doc.close()
-                logging.info(f"  - Saved split page {page_num + 1} as {output_filename}")
+                pdf.copy().extract_pages([page_num]).compress().to_pdf(output_path)
+                logging.info(f"  - Saved page {page_num} as {output_filename}")
             else:
-                logging.warning(f"  - Page {page_num + 1} is out of range for {pdf_file}")
+                logging.warning(f"  - Page {page_num} is out of range for {pdf_file}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")

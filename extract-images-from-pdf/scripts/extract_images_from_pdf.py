@@ -9,7 +9,7 @@
 import os
 import sys
 import logging
-from pypdf import PdfReader
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -67,21 +67,11 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        reader = PdfReader(pdf_path)
-        
-        # Process each page and extract images
-        for page_num, page in enumerate(reader.pages, start=1):
-            images_on_page = list(page.images)
-            logging.info(f"Page {page_num}: {len(images_on_page)} image(s) found.")
-            
-            for img_count, image_file_object in enumerate(images_on_page, start=1):
-                img_output_filename = f"{timestamp}_{pdf_file.split('.')[0]}_p{page_num}_{img_count}_{image_file_object.name}"
-                img_output_path = os.path.join(path_output, img_output_filename)
+        output_subdir = os.path.join(path_output, f"{timestamp}_{pdf_file.split('.')[0]}")
+        os.makedirs(output_subdir, exist_ok=True)
 
-                with open(img_output_path, "wb") as fp:
-                    fp.write(image_file_object.data)
-                
-                logging.info(f"  - Extracted image {img_count} from page {page_num} to {img_output_filename}")
+        extracted_files = lz.read(pdf_path).extract_images(output_subdir)
+        logging.info(f"Extracted {len(extracted_files)} image(s) from {pdf_file}")
 
     except Exception as e:
         logging.error(f"Failed to process {pdf_file} - {e}")

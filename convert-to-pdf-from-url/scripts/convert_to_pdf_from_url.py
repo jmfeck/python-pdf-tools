@@ -9,7 +9,8 @@
 import os
 import sys
 import logging
-import pdfkit
+import argparse
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -44,6 +45,12 @@ file_handler = logging.FileHandler(path_log)
 file_handler.setFormatter(logging.Formatter(log_format))
 logging.getLogger().addHandler(file_handler)
 
+# Argument parser setup
+parser = argparse.ArgumentParser(description="Convert URLs to PDF.")
+parser.add_argument("--engine", type=str, choices=["pymupdf", "weasyprint", "playwright"], default="pymupdf",
+                    help="Rendering engine: 'pymupdf' (default, no external deps), 'weasyprint' (needs GTK), 'playwright' (headless Chromium)")
+args = parser.parse_args()
+
 logging.info("Starting URL to PDF Conversion Process")
 logging.info(f"Timestamp: {timestamp}")
 logging.info(f"Input file: {path_input_file}")
@@ -71,9 +78,8 @@ for index, url in enumerate(urls, start=1):
         output_filename = f"{timestamp}_url_{index}.pdf"
         output_path = os.path.join(path_output, output_filename)
 
-        # Convert the URL to PDF
         logging.info(f"Converting URL to PDF: {url}")
-        pdfkit.from_url(url, output_path)
+        lz.read_html(url, engine=args.engine).to_pdf(output_path)
         logging.info(f"PDF saved: {output_path}")
 
     except Exception as e:

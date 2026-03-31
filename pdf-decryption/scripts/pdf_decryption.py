@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-from pypdf import PdfReader, PdfWriter
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -73,23 +73,9 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        reader = PdfReader(pdf_path)
-        
-        # Attempt to decrypt the PDF
-        if reader.is_encrypted:
-            logging.info(f"Attempting to decrypt {pdf_file}")
-            reader.decrypt(args.password)
-        
-        # Create a writer and add all pages to it
-        writer = PdfWriter()
-        for page in reader.pages:
-            writer.add_page(page)
-
-        # Save the decrypted PDF
         decrypted_output_path = os.path.join(path_output, f"{timestamp}_decrypted_{pdf_file}")
-        with open(decrypted_output_path, "wb") as decrypted_file:
-            writer.write(decrypted_file)
 
+        lz.read(pdf_path).decrypt(args.password).to_pdf(decrypted_output_path)
         logging.info(f"Decrypted PDF saved as {decrypted_output_path}")
 
     except Exception as e:

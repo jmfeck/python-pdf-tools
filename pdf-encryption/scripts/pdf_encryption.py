@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 import argparse
-from pypdf import PdfReader, PdfWriter
+import lazypdf as lz
 from datetime import datetime
 
 # Program name for log prefix
@@ -48,7 +48,9 @@ logging.getLogger().addHandler(file_handler)
 # Argument parser setup
 parser = argparse.ArgumentParser(description="Encrypt PDF files with a password.")
 parser.add_argument("--password", type=str, required=True, help="Password to encrypt the output PDF files.")
-parser.add_argument("--encryption-algo", type=str, default="AES-256-R5", help="Encryption algorithm (default: AES-256-R5).")
+parser.add_argument("--algorithm", type=str, default="AES-256-R5",
+                    choices=["AES-256-R5", "AES-256", "AES-128", "RC4-128", "RC4-40"],
+                    help="Encryption algorithm. Default: AES-256-R5.")
 args = parser.parse_args()
 
 logging.info("Starting Process")
@@ -74,18 +76,9 @@ for pdf_file in input_pdf_files:
 
     try:
         os.makedirs(path_output, exist_ok=True)
-        reader = PdfReader(pdf_path)
-        writer = PdfWriter(clone_from=reader)
-
-        # Encrypt the output PDF with the provided password and specified algorithm
-        logging.info(f"Encrypting the PDF with password using {args.encryption_algo} algorithm.")
-        writer.encrypt(args.password, algorithm=args.encryption_algo)
-
-        # Save the encrypted PDF
         encrypted_output_path = os.path.join(path_output, f"{timestamp}_encrypted_{pdf_file}")
-        with open(encrypted_output_path, "wb") as encrypted_file:
-            writer.write(encrypted_file)
 
+        lz.read(pdf_path).encrypt(args.password, algorithm=args.algorithm).to_pdf(encrypted_output_path)
         logging.info(f"Encrypted PDF saved as {encrypted_output_path}")
 
     except Exception as e:
